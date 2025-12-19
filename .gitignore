@@ -1,0 +1,91 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+.thread_id
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code (AI assistant configs - keep private)
+.claude/
+.mcp.json
+*-mcp-config.json
+MCP-SERVER.md
+
+# Logs
+*.log
+logs/
+north.log
+weaviate-mcp.exe
+khalil_dropbox_index.db
+nul
+
+# Database
+*.db
+*.sqlite
+weaviate_data/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test files
+.pytest_cache/
+.coverage
+
+# Temporary files
+*.tmp
+*.temp
+nul
+
+# Frontend build artifacts
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.turbo/
+frontend/.cache/
+
+# LangChain
+.langchain/
+.cache/
+
+# Obsidian vault (keep private)
+Official Vault/
+
+# Dropbox sync cursor and state (contains sensitive tokens and state info)
+.dropbox_sync_cursor
+src/agents/dropbox/.dropbox_sync_cursor
+dropbox_token_cache.json
+dropbox_sync_state.json
+dropbox_cursor_state.json

@@ -1,0 +1,35 @@
+# Core dependencies
+openai>=1.12.0
+python-dotenv>=1.0.0
+
+# LangChain dependencies
+langchain>=0.1.0
+langchain-openai>=0.1.0
+
+# Vector store 
+weaviate-client>=4.4.0
+
+# Additional utilities
+pyyaml>=6.0
+python-frontmatter>=1.0.0
+voyageai>=0.3.0
+
+# HTTP client (used for Dropbox OAuth refresh + misc calls)
+requests>=2.32.3
+
+# Supabase and API requirements (2025 latest)
+supabase>=2.18.1
+fastapi[standard]>=0.112.0
+python-multipart>=0.0.12
+PyJWT>=2.8.0  # JWT token verification for authentication
+websockets>=14.1
+cryptography>=42.0.0
+
+# File processing capabilities (multimodal support)
+PyPDF2  # PDF text extraction
+pandas  # Excel/CSV processing
+openpyxl  # Excel file support
+Pillow  # Image optimization
+python-docx>=0.8.11  # DOCX file text extraction with table support
+dropbox>=12.0.0  # Dropbox API client
+tenacity>=8.2.0  # Retry logic with exponential backoff

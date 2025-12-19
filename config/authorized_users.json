@@ -1,0 +1,11 @@
+{
+  "authorized_emails": [
+    "user1@example.com",
+    "user2@example.com",
+    "user3@example.com",
+    "user4@example.com"
+  ],
+  "company_domain": "@example.com",
+  "allow_domain_signup": false,
+  "whitelist_message": "Access restricted to authorized company personnel only. Please contact your administrator if you need access."
+}
