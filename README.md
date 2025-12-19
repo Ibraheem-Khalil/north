@@ -103,11 +103,11 @@ Combines semantic understanding with keyword matching for superior retrieval:
 **Example Query Flow:**
 ```mermaid
 graph TD
-    A["User Query:<br/>'Who did electrical work on Regency?'"]
-    B["Semantic Understanding:<br/>[electrical contractors, project=Regency]"]
-    C["Hybrid Search:<br/>Dynamic alpha (0.3-0.7 based on query type)"]
-    D["Rerank Top 10 → Return Top 3"]
-    E["Response:<br/>'Triple Eagle Electric (contact: Tom, phone: 555-1234)'"]
+    A["User Query:<br/>'Who did electrical<br/>work on Regency?'"]
+    B["Semantic Understanding:<br/>[electrical contractors,<br/>project=Regency]"]
+    C["Hybrid Search:<br/>Dynamic alpha<br/>(0.3-0.7 tuning)"]
+    D["Rerank Top 10<br/>→ Return Top 3"]
+    E["Response:<br/>'Triple Eagle Electric<br/>(Tom, 555-1234)'"]
 
     A --> B --> C --> D --> E
 
