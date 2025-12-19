@@ -39,7 +39,7 @@ NORTH uses an **agent-per-tool architecture** where each data source has a dedic
 
 ```mermaid
 graph TD
-    A["<b>NORTH Orchestrator</b><br/>(GPT-4o - High Reasoning)<br/>• Query understanding & intent classification<br/>• Agent routing & context management<br/>• Response synthesis & error handling"]
+    A["<b>NORTH Orchestrator</b><br/>(GPT-4o - High Reasoning)<br/>• Query understanding<br/>• Agent routing<br/>• Response synthesis"]
 
     A --> B["<b>Obsidian Agent</b><br/>GPT-4o-mini<br/>Weaviate<br/>Voyage AI<br/>Hybrid Search"]
     A --> C["<b>Dropbox Agent</b><br/>GPT-4o-mini<br/>Weaviate<br/>PyPDF2/DOCX<br/>Voyage AI"]
@@ -87,7 +87,7 @@ graph TD
 - **Hosting**: Render (frontend + backend)
 - **Database**: Weaviate Cloud ($25/month)
 - **Auth Provider**: Supabase with email whitelist
-- **Repository**: [GitHub](https://github.com/even-a-worm-will-turn/NORTH-AI)
+- **Repository**: [GitHub](https://github.com/Ibraheem-Khalil/north)
 
 ---
 
@@ -158,12 +158,12 @@ except jwt.InvalidTokenError:
 
 ## 📊 Data & Performance
 
-### Indexed Content
-- **Obsidian Vault**: 180 documents (153 companies, 25 work logs)
-- **Dropbox Storage**: 1,174 files (1.47 GB) across projects
-- **Vector Database**: ~5,000 vectors (0.25% of 2M tier capacity)
-- **Embedding Model**: Voyage AI voyage-3-large (automatic via Weaviate)
-- **Verification**: Run `python scripts/data_profile.py` (with Weaviate reachable) to print current collection counts; figures above reflect the last production sync.
+### Indexed Content (replace with your data)
+- **Obsidian Vault**: example snapshot was 180 docs (153 companies, 25 work logs)
+- **Dropbox Storage**: example snapshot was 1,174 files (1.47 GB)
+- **Vector Database**: ~5,000 vectors in prior run (0.25% of 2M tier)
+- **Embedding Model**: Voyage AI voyage-3-large (via Weaviate)
+- **Verify counts**: `python scripts/data_profile.py` (Weaviate must be reachable)
 
 ### Response Characteristics
 - **Query Latency**: 1-5 seconds for complex queries (typical for LLM + vector search + document retrieval)
@@ -193,16 +193,16 @@ except jwt.InvalidTokenError:
 
 1. **Clone and install dependencies:**
    ```bash
-   git clone <repository-url>
-   cd NORTH
+   git clone https://github.com/Ibraheem-Khalil/north.git
+   cd north
    pip install -r requirements.txt
    ```
 
-2. **Start local Weaviate instance:**
+2. **Start local Weaviate instance (Weaviate must include `text2vec-voyageai` for the default schema; Weaviate Cloud is the simplest path):**
    ```bash
    docker run -d -p 8080:8080 -p 50051:50051 \
      -e AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true \
-     -e ENABLE_MODULES=text2vec-openai \
+     -e ENABLE_MODULES=text2vec-voyageai,text2vec-openai \
      --name weaviate_north semitechnologies/weaviate:latest
    ```
 
@@ -222,7 +222,16 @@ except jwt.InvalidTokenError:
    python main.py
    ```
 
-   On first run, NORTH automatically initializes the Weaviate schema and connects to your local instance.
+   Agents expect existing Weaviate collections populated with your data (Obsidian/Dropbox). Use the sync scripts under `src/agents/obsidian/` and `src/agents/dropbox_v2/` to ingest your content.
+
+5. **Run the API + frontend (for the web UI):**
+   ```bash
+   uvicorn api:app --reload --port 8000
+   # in another shell
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
 ### Environment Auto-Detection
 
@@ -323,12 +332,12 @@ NORTH: [Vision Analysis] This appears to be water damage affecting drywall.
 
 ### Key Test Cases
 ```bash
-# Test authentication
-curl -X POST http://localhost:8000/api/auth/login \
+# Test authentication (returns access/refresh tokens)
+curl -X POST http://localhost:8000/api/auth/signin \
   -H "Content-Type: application/json" \
   -d '{"email": "authorized@example.com", "password": "test123"}'
 
-# Test multimodal upload
+# Test multimodal upload (requires Bearer token from signin)
 curl -X POST http://localhost:8000/api/chat/with-files \
   -H "Authorization: Bearer <token>" \
   -F "message=What's in this image?" \
@@ -413,23 +422,19 @@ NORTH/
 │   │   ├── file_processor.py          # Multimodal file handling
 │   │   └── context_manager.py         # Conversation history
 │   ├── agents/
-│   │   ├── obsidian/
-│   │   │   └── atomic_document_agent.py    # Knowledge base agent (GPT-4o-mini)
-│   │   └── dropbox_v2/
-│   │       └── dropbox_weaviate_agent.py   # Document search agent
+│   │   ├── obsidian/                  # Knowledge base ingestion + search
+│   │   │   └── atomic_document_agent.py
+│   │   └── dropbox_v2/                # Dropbox Weaviate integration
+│   │       └── dropbox_integration.py
 │   └── api/
 │       └── auth.py                    # JWT authentication & validation
-├── frontend/
-│   ├── src/
-│   │   ├── components/                # React UI components
-│   │   ├── contexts/                  # Auth context provider
-│   │   └── hooks/                     # WebSocket chat hook
-│   └── package.json
+├── frontend/                          # React web client
+├── scripts/                           # Utilities (evaluation, data_profile, backups)
+├── docs/SYSTEM.md                     # Detailed system documentation
 ├── api.py                             # FastAPI backend + WebSocket
 ├── main.py                            # CLI entry point
 ├── requirements.txt                   # Python dependencies
-├── .env.example                       # Environment template
-└── SYSTEM.md                          # Detailed system documentation
+└── .env.example                       # Environment template
 ```
 
 ---
@@ -526,23 +531,22 @@ else:
 
 ## 📚 Documentation
 
-- **[SYSTEM.md](./SYSTEM.md)** - Comprehensive system documentation and architecture details
-- **[.env.example](./.env.example)** - Environment configuration template with descriptions
+- **[SYSTEM.md](docs/SYSTEM.md)** - Comprehensive system documentation and architecture details
+- **[.env.example](.env.example)** - Environment configuration template with descriptions
 
 ---
 
 ## 📄 License
 
-This project is a template for a small-team AI assistant deployment. All company names and domains can be replaced with your own.
+MIT
 
 ---
 
 ## 👤 Contact
 
-**Developer**: Ibraheem Khalil
-**Email**: dev@example.com
-**Production URL**: https://example-ai.com
-**Repository**: https://github.com/even-a-worm-will-turn/NORTH-AI
+**Developer**: Ibraheem Khalil  
+**Email**: ibraheemhkhalil0@gmail.com  
+**Repository**: https://github.com/Ibraheem-Khalil/north
 
 ---
 
